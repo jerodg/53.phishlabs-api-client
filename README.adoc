@@ -1,0 +1,108 @@
+:experimental:
+:icons: font
+:chkdbx: pass:normal[{startsb}&#10004;{endsb}]
+:chkbx: pass:normal[{startsb}  {endsb}]
+:source-highlighter: rouge
+:revdate: {docdatetime}
+:doctype: article
+:sectanchors:
+:sectlinks:
+:sectnums:
+:toc:
+
+:author: Jerod Gawne
+:email: jerodgawne@gmail.com
+:docdate: March 14, 2019
+:name: LibSEA: PhishLabs
+:description: LibSEA - {name} Client API
+:keywords: libsea, api, {name}
+
+:division: Information Security
+:department: Cyber Security and Operations
+:owner: Manager of Security, Engineering, and Automation (SEA) team.
+:summary: Provide the SEA team with details on deploying, configuring, maintaining, and troubleshooting {name}.
+
+= {name}
+
+**Division**: {division} +
+**Department**: {department} +
+**Owner**: {owner} +
+**Purpose**: {summary} +
+
+== Build
+.From Source Directory
+[source,shell]
+pipenv shell
+python -OO setup.py sdist
+
+This will create a .tar.gz file in /<source_root>/dist
+
+Copy this to
+[source,shell]
+/opt/fitb/pip
+
+and it will be available for install using the directions provided here.
+
+== Test
+
+
+== Installation
+
+=== Prerequisite(s)
+Python3.7+ with pip, setup_tools, and pipenv packages installed.
+
+=== Install
+NOTE: Requires an additional source be added to your projects Pipfile.
+
+.Add Pypi Source
+[source,toml]
+....
+[[source]]
+url = "http://slgramihqaims90.info53.com:3030/simple"
+verify_ssl = false
+name = "pypi-sea"
+....
+
+.Install
+[source,shell]
+pipenv install libsea_phishlabs
+
+
+== Access
+.Requires Functional Account
+
+=== Account
+.Requires Environment Variables
+
+=== Firewall
+.LAN
+|===
+|Port | Protocol |Description
+| | |
+|===
+
+.WAN
+|===
+|Port | Protocol |Description
+| | |
+|===
+
+=== Proxy
+
+
+== Location
+.Production
+This is a python package/module, it should be installed using the instructions
+above.
+
+.Development
+This is a python package/module, it should be installed using the instructions
+above.
+
+.Source
+https://github.info53.com/Fifth-Third/SEA_LibSEA_Template[GitHub]
+
+== Data
+No data resources are accessed.
+
+== Usage
