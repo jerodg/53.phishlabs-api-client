@@ -1,0 +1,34 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = false
+name = "pypi"
+
+
+[[source]]
+url = "http://slgramihqaims90.info53.com:3030/simple"
+verify_ssl = false
+name = "seapypi"
+
+
+[packages]
+aiohttp = "*"
+aiodns = "*"
+cchardet = "*"
+jgutils = "*"
+tenacity = "*"
+#libsea_base = "*"
+
+
+[dev-packages]
+aiohttp = "*"
+aiodns = "*"
+cchardet = "*"
+jgutils = "*"
+pytest = "*"
+wheel = "*"
+setuptools = "*"
+requests = "*"
+
+
+[requires]
+python_version = "3.7"
