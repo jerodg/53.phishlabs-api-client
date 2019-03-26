@@ -2,23 +2,22 @@
 """Phishlabs API: Jerod Gawne, 2019.01.09 <https://github.com/jerodg>"""
 import asyncio
 import logging
-from sys import exc_info, argv
+from sys import argv, exc_info
 from traceback import print_exception
 from typing import (Any, List, Optional, Tuple, Union)
+from uuid import uuid4
 
 import aiohttp as aio
 from aiohttp import BasicAuth
 from os import (getenv)
-from os.path import abspath, dirname, realpath, basename
-from tenacity import after_log, retry, retry_if_exception_type, wait_random_exponential
-from uuid import uuid4
+from os.path import abspath, basename, dirname, realpath
+from tenacity import after_log, before_sleep_log, retry, retry_if_exception_type, stop_after_attempt, wait_random_exponential
 
 from libsea_base.base_api import ApiBase
 
 logger = logging.getLogger(__name__)
 DBG = logger.isEnabledFor(logging.DEBUG)
 NFO = logger.isEnabledFor(logging.INFO)
-RETRY: int = 5
 
 
 # todo: submit bug report; when autocompleting an overridden function the return type isn't copied over
@@ -88,8 +87,10 @@ class PhishlabsApi(ApiBase):
         return (await self.process_results(results))['success'][0]['header']['totalResult']
 
     @retry(retry=retry_if_exception_type(aio.ClientError),
-           wait=wait_random_exponential(max=RETRY),
-           after=after_log(logger, logging.WARNING))
+           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
+           after=after_log(logger, logging.DEBUG),
+           stop=stop_after_attempt(7),
+           before_sleep=before_sleep_log(logger, logging.DEBUG))
     async def __get_case_count(self, session: aio.ClientSession, params: list) -> Union[dict, aio.ClientResponse]:
         async with self.sem:
             response = await session.get(self.URI_CASE, params=params, ssl=self.VERIFY_SSL, proxy=self.PROXY)
@@ -127,8 +128,10 @@ class PhishlabsApi(ApiBase):
         return await self.process_results(results, 'data')
 
     @retry(retry=retry_if_exception_type(aio.ClientError),
-           wait=wait_random_exponential(max=RETRY),
-           after=after_log(logger, logging.WARNING))
+           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
+           after=after_log(logger, logging.DEBUG),
+           stop=stop_after_attempt(7),
+           before_sleep=before_sleep_log(logger, logging.DEBUG))
     async def __get_cases(self, session: aio.ClientSession, params: List[Tuple[Any, Any]]) -> Union[
         dict, aio.ClientResponse]:
         async with self.sem:
@@ -156,8 +159,10 @@ class PhishlabsApi(ApiBase):
         return await self.process_results(results, 'data')
 
     @retry(retry=retry_if_exception_type(aio.ClientError),
-           wait=wait_random_exponential(max=RETRY),
-           after=after_log(logger, logging.WARNING))
+           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
+           after=after_log(logger, logging.DEBUG),
+           stop=stop_after_attempt(7),
+           before_sleep=before_sleep_log(logger, logging.DEBUG))
     async def __get_case(self, session: aio.ClientSession, case_id: str) -> Union[dict, aio.ClientResponse]:
         async with self.sem:
             response = await session.get(f'{self.URI_CASE}/{case_id}', ssl=self.VERIFY_SSL, proxy=self.PROXY)
@@ -189,8 +194,10 @@ class PhishlabsApi(ApiBase):
         return await self.process_results(results)
 
     @retry(retry=retry_if_exception_type(aio.ClientError),
-           wait=wait_random_exponential(max=RETRY),
-           after=after_log(logger, logging.WARNING))
+           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
+           after=after_log(logger, logging.DEBUG),
+           stop=stop_after_attempt(7),
+           before_sleep=before_sleep_log(logger, logging.DEBUG))
     async def __get_attachment(self, session: aio.ClientSession, attachment: dict) -> Union[dict, aio.ClientResponse]:
         async with self.sem:
             response = await session.get(f'{self.URI_ATTACHMENT}/{attachment["id"]}',
