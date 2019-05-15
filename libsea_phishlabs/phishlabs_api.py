@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.7
-"""Phishlabs API: Jerod Gawne, 2019.01.09 <https://github.com/jerodg>"""
+"""LibSEA Phishlabs: API
+   Jerod Gawne, 2019.01.09 <https://github.com/jerodg>"""
 import asyncio
 import logging
 from sys import argv, exc_info
@@ -18,9 +19,6 @@ from libsea_base.base_api import ApiBase
 logger = logging.getLogger(__name__)
 DBG = logger.isEnabledFor(logging.DEBUG)
 NFO = logger.isEnabledFor(logging.INFO)
-
-
-# todo: submit bug report; when autocompleting an overridden function the return type isn't copied over
 
 
 class PhishlabsApi(ApiBase):
