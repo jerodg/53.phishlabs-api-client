@@ -18,36 +18,27 @@ NFO = logger.isEnabledFor(logging.INFO)
 ROOT = dirname(abspath(__file__))
 
 
-def format_banner(message) -> str:
-    msg_len = len(message)
-    if msg_len >= 80:
-        return message
+# todo: auto-grab an attachment id
 
-    ast = (80 - msg_len) // 2
-    ast = '*' * ast
-    msg = f'\n{ast}{message}{ast}\n'
+@pytest.mark.asyncio
+async def test_get_attachment():
+    ts = time.perf_counter()
+    bprint('Test: Get Attachment')
 
-    return msg
-
-
-with PhishlabsApi(root=ROOT, sem=10) as plapi:
-    def test_get_attachment():
-        assert plapi.CACHE['random_attachment'] is not None
-        attachment_id = plapi.CACHE['random_attachment']
-
-        loop = asyncio.get_event_loop()
-        results = loop.run_until_complete(plapi.get_attachment(attachment_id=attachment_id))
-        # print('\nresults: ', results)
+    with PhishlabsApi(root=ROOT, sem=10) as plapi:
+        results = await plapi.get_attachments(attachments={'id': '1f5d2f83-700a-11e9-b826-0eb92493f786'})
+        # print('\nresults:', results)  # debug
 
         assert type(results) is dict
         assert results['success'] is not None
         assert results['failure'][0] is None
 
-        print(format_banner(f'Test: Get Attachment {attachment_id}'))
-        print('Success Result:')
+        print('\nTop 5 Success Result:')
         print(*results['success'][:5], sep='\n')
-        print('\nFailure Result:')
+        print('\nTop 5 Failure Result:')
         print(*results['failure'][:5], sep='\n')
+
+    bprint(f'-> Completed in {round((time.perf_counter() - ts) / 60, 2)} minutes.')
 
 
 if __name__ == '__main__':

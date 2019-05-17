@@ -44,12 +44,12 @@ class PhishlabsApi(ApiBase):
 
     def pl_process_params(self, **kwargs) -> list:
         parms = {'caseType': kwargs.pop('case_type', ['Phishing', 'Phishing Redirect', 'Vishing']),
-                 'dateBegin':  kwargs.pop('date_begin', None),
-                 'dateEnd':    kwargs.pop('date_end', None),
-                 'dateField':  kwargs.pop('date_field', 'caseOpen'),
-                 'format':     kwargs.pop('format', 'json'),
+                 'dateBegin': kwargs.pop('date_begin', None),
+                 'dateEnd': kwargs.pop('date_end', None),
+                 'dateField': kwargs.pop('date_field', 'caseOpen'),
+                 'format': kwargs.pop('format', 'json'),
                  'maxRecords': kwargs.pop('max_records', self.MAX_RECORDS),
-                 'offset':     kwargs.pop('offset', 0)}
+                 'offset': kwargs.pop('offset', 0)}
 
         params = []
         for k, v in parms.items():
