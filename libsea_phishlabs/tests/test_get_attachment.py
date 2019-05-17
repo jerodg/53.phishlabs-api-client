@@ -1,15 +1,15 @@
 #!/usr/bin/env python3.7
-"""Test Phishlabs API- Get Attachment: Jerod Gawne, 2019.01.09 <https://github.com/jerodg/>"""
-import asyncio
+"""Test Phishlabs API: Get Attachment
+   Jerod Gawne, 2019.01.09 <https://github.com/jerodg/>"""
 import logging
 import sys
+import time
 import traceback
+from os.path import abspath, dirname
 
 import pytest
-from jgutils.persistentdict import PersistentDict as PerDi
-from os.path import (abspath, dirname, realpath)
-from random import choice
 
+from libsea_base.base_api_utils import bprint
 from libsea_phishlabs.phishlabs_api import PhishlabsApi
 
 logger = logging.getLogger(__name__)
