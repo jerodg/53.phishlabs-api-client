@@ -18,44 +18,39 @@ NFO = logger.isEnabledFor(logging.INFO)
 ROOT = dirname(abspath(__file__))
 
 
-def format_banner(message) -> str:
-    msg_len = len(message)
-    if msg_len >= 80:
-        return message
+@pytest.mark.asyncio
+async def test_get_cases():
+    ts = time.perf_counter()
+    bprint('Test: Get Cases')
 
-    ast = (80 - msg_len) // 2
-    ast = '*' * ast
-    msg = f'\n{ast}{message}{ast}\n'
-
-    return msg
-
-
-with PhishlabsApi(root=ROOT, sem=10) as plapi:
-      def test_get_cases():
-        loop = asyncio.get_event_loop()
-        results = loop.run_until_complete(plapi.get_cases())
+    with PhishlabsApi(root=ROOT, sem=10) as plapi:
+        results = await plapi.get_cases()
         # print('\nresults: ', results)  # debug
 
         assert type(results) is dict
         assert results['success'] is not None
         assert results['failure'][0] is None
 
-        # Grab a random case with an attachment
-        while 1:
-            try:
-                rcid = choice(results['success'])
-                if len(rcid['attachments']) >= 1:
-                    plapi.CACHE['random_case'] = rcid['caseId']
-                    print('random_case: ', plapi.CACHE['random_case'])  # debug
-                    break
-            except KeyError:
-                pass
-
-        print(format_banner(f'Test: Get Cases {plapi.case_count}'))
-        print('Top 5 Success Result:')
+        print(f'Found {len(results["success"])} cases.')
+        print('\nTop 5 Success Result:')
         print(*results['success'][:5], sep='\n')
         print('\nTop 5 Failure Result:')
         print(*results['failure'][:5], sep='\n')
+        # print('\nLast 100 Success Result:')
+        # print(*results['success'][-100:], sep='\n')
+        r2 = set()
+        print('len_results:', len(results['success']))
+        for r in results['success']:
+            print(r['caseId'])
+            r2.add(r['caseId'])
+
+        print('r2_len:', len(r2))
+        with open(realpath('./data/test_get_cases_success_result.txt'), mode='w+') as of:
+            for i, x in enumerate(results['success']):
+                of.write(f'{x}\n')
+                # print(i, x)
+
+    bprint(f'-> Completed in {round((time.perf_counter() - ts) / 60, 2)} minutes.')
 
 
 if __name__ == '__main__':
