@@ -3,15 +3,16 @@
    Jerod Gawne, 2019.01.09 <https://github.com/jerodg>"""
 import asyncio
 import logging
+from copy import copy
+from os import getenv
+from os.path import abspath, basename, dirname, realpath
 from sys import argv, exc_info
 from traceback import print_exception
-from typing import (Any, List, Optional, Tuple, Union)
+from typing import Any, List, Optional, Tuple, Union
 from uuid import uuid4
 
 import aiohttp as aio
 from aiohttp import BasicAuth
-from os import (getenv)
-from os.path import abspath, basename, dirname, realpath
 from tenacity import after_log, before_sleep_log, retry, retry_if_exception_type, stop_after_attempt, wait_random_exponential
 
 from libsea_base.base_api import ApiBase
@@ -27,13 +28,12 @@ class PhishlabsApi(ApiBase):
     MAX_RECORDS: int = 100  # API Max is 200, minimum is 20 (default)
     PROXY: str = getenv('PL_PROXY')
     ROOT = dirname(abspath(__file__))
-    SEM: int = 10
+    SEM: int = 5
     URI_BASE = f'{getenv("PL_URI")}/v1/data'
     URI_ATTACHMENT = f'{URI_BASE}/attachment'
     URI_CASE = f'{URI_BASE}/cases'
     URI_OPEN_CASE = f'{URI_CASE}/open'
     URI_CLOSED_CASE_URI = f'{URI_CASE}/closed'
-    TRUST_ENV: bool = True  # Reads ~/.netrc or HTTP_PROXY/HTTPS_PROXY Envars for proxy info/credentials
     VERIFY_SSL: bool = False  # Verify SSL Certifcates
 
     def __init__(self, root: Optional[str] = None, sem: Optional[int] = None, ):
@@ -43,8 +43,7 @@ class PhishlabsApi(ApiBase):
         ApiBase.__exit__(self, exc_type, exc_val, exc_tb)
 
     def pl_process_params(self, **kwargs) -> list:
-        parms = {'caseStatus': kwargs.pop('case_status', ['New', 'Assigned', 'Closed']),
-                 'caseType':   kwargs.pop('case_type', ['Phishing', 'Phishing Redirect', 'Vishing']),
+        parms = {'caseType': kwargs.pop('case_type', ['Phishing', 'Phishing Redirect', 'Vishing']),
                  'dateBegin':  kwargs.pop('date_begin', None),
                  'dateEnd':    kwargs.pop('date_end', None),
                  'dateField':  kwargs.pop('date_field', 'caseOpen'),
@@ -63,120 +62,11 @@ class PhishlabsApi(ApiBase):
         # print('params: ', params)  # debug
         return params
 
-    async def get_case_count(self, **kwargs: Optional) -> int:
-        """See process_params() for kwargs"""
-        params = self.pl_process_params(**kwargs, max_records=1)
-
-        async with aio.ClientSession(trust_env=self.TRUST_ENV, auth=self.AUTH) as session:
-            if NFO:
-                logger.info('Getting case count...')
-
-            tasks = [asyncio.create_task(self.__get_case_count(session=session, params=params))]
-            results = await asyncio.gather(*tasks)
-
-            if NFO:
-                logger.info('\tComplete.')
-
-        await session.close()
-
-        if NFO:
-            logger.info(f'\tFound {results["header"]["totalResult"]} cases')
-
-        return (await self.process_results(results))['success'][0]['header']['totalResult']
-
-    @retry(retry=retry_if_exception_type(aio.ClientError),
-           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
-           after=after_log(logger, logging.DEBUG),
-           stop=stop_after_attempt(7),
-           before_sleep=before_sleep_log(logger, logging.DEBUG))
-    async def __get_case_count(self, session: aio.ClientSession, params: list) -> Union[dict, aio.ClientResponse]:
-        async with self.sem:
-            response = await session.get(self.URI_CASE, params=params, ssl=self.VERIFY_SSL, proxy=self.PROXY)
-
-            if 200 <= response.status <= 299:
-                return await response.json(content_type=None)  # Set content type if known
-            elif response.status in [429, 500, 502, 503, 504]:
-                raise aio.ClientError
-            else:
-                return response
-
-    async def get_cases(self, **kwargs: Optional) -> dict:
-        """See process_params() for kwargs"""
-        params = self.pl_process_params(**kwargs, offset=None)
-        case_count = await self.get_case_count(**kwargs)
-
-        async with aio.ClientSession(trust_env=self.TRUST_ENV, auth=self.AUTH) as session:
-            if NFO:
-                logger.info('Getting cases...')
-
-            tasks = []
-            for x in range(0, case_count + 1, self.MAX_RECORDS):
-                params.append(('offset', x))
-                tasks.append(asyncio.create_task(
-                        self.__get_cases(session=session, params=params)))
-                del params[-1]
-
-            results = await asyncio.gather(*tasks)
-
-            if NFO:
-                logger.info('\tComplete.')
-
-        await session.close()
-
-        return await self.process_results(results, 'data')
-
-    @retry(retry=retry_if_exception_type(aio.ClientError),
-           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
-           after=after_log(logger, logging.DEBUG),
-           stop=stop_after_attempt(7),
-           before_sleep=before_sleep_log(logger, logging.DEBUG))
-    async def __get_cases(self, session: aio.ClientSession, params: List[Tuple[Any, Any]]) -> Union[
-        dict, aio.ClientResponse]:
-        async with self.sem:
-            response = await session.get(self.URI_CASE, params=params, ssl=self.VERIFY_SSL, proxy=self.PROXY)
-            if 200 <= response.status <= 299:
-                return await response.json(content_type=None)  # Set content type if known
-            elif response.status in [429, 500, 502, 503, 504]:
-                raise aio.ClientError
-            else:
-                return response
-
-    async def get_case(self, case_id: str) -> dict:
-        async with aio.ClientSession(trust_env=self.TRUST_ENV, auth=self.AUTH) as session:
-            if NFO:
-                logger.info(f'Getting case {case_id}...')
-
-            tasks = [asyncio.create_task(self.__get_case(session=session, case_id=case_id))]
-            results = await asyncio.gather(*tasks)
-
-            if NFO:
-                logger.info('\tComplete.')
-
-        await session.close()
-
-        return await self.process_results(results, 'data')
-
-    @retry(retry=retry_if_exception_type(aio.ClientError),
-           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
-           after=after_log(logger, logging.DEBUG),
-           stop=stop_after_attempt(7),
-           before_sleep=before_sleep_log(logger, logging.DEBUG))
-    async def __get_case(self, session: aio.ClientSession, case_id: str) -> Union[dict, aio.ClientResponse]:
-        async with self.sem:
-            response = await session.get(f'{self.URI_CASE}/{case_id}', ssl=self.VERIFY_SSL, proxy=self.PROXY)
-
-            if 200 <= response.status <= 299:
-                return await response.json(content_type=None)  # Set content type if known
-            elif response.status in [429, 500, 502, 503, 504]:
-                raise aio.ClientError
-            else:
-                return response
-
     async def get_attachments(self, attachments: Union[List[dict], dict]) -> dict:
         if type(attachments) is not list:
             attachments = [attachments]
 
-        async with aio.ClientSession(trust_env=self.TRUST_ENV, auth=self.AUTH) as session:
+        async with aio.ClientSession(auth=self.AUTH) as session:
             if NFO:
                 logger.info(f'Getting attachment(s)...')
 
@@ -215,6 +105,115 @@ class PhishlabsApi(ApiBase):
                             break
 
                 return {**attachment, 'filePath': file}
+            elif response.status in [429, 500, 502, 503, 504]:
+                raise aio.ClientError
+            else:
+                return response
+
+    async def get_case(self, case_id: str) -> dict:
+        async with aio.ClientSession(auth=self.AUTH) as session:
+            if NFO:
+                logger.info(f'Getting case {case_id}...')
+
+            tasks = [asyncio.create_task(self.__get_case(session=session, case_id=case_id))]
+            results = await asyncio.gather(*tasks)
+
+            if NFO:
+                logger.info('\tComplete.')
+
+        await session.close()
+
+        return await self.process_results(results, 'data')
+
+    @retry(retry=retry_if_exception_type(aio.ClientError),
+           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
+           after=after_log(logger, logging.DEBUG),
+           stop=stop_after_attempt(7),
+           before_sleep=before_sleep_log(logger, logging.DEBUG))
+    async def __get_case(self, session: aio.ClientSession, case_id: str) -> Union[dict, aio.ClientResponse]:
+        async with self.sem:
+            response = await session.get(f'{self.URI_CASE}/{case_id}', ssl=self.VERIFY_SSL, proxy=self.PROXY)
+
+            if 200 <= response.status <= 299:
+                return await response.json(content_type=None)  # Set content type if known
+            elif response.status in [429, 500, 502, 503, 504]:
+                raise aio.ClientError
+            else:
+                return response
+
+    async def get_case_count(self, **kwargs: Optional) -> int:
+        """See process_params() for kwargs"""
+        params = self.pl_process_params(**kwargs, max_records=1)
+
+        async with aio.ClientSession(auth=self.AUTH) as session:
+            if NFO:
+                logger.info('Getting case count...')
+
+            tasks = [asyncio.create_task(self.__get_case_count(session=session, params=params))]
+            results = await asyncio.gather(*tasks)
+
+            if NFO:
+                logger.info('\tComplete.')
+
+        await session.close()
+
+        if NFO:
+            logger.info(f'\tFound {results["header"]["totalResult"]} cases')
+
+        return (await self.process_results(results))['success'][0]['header']['totalResult']
+
+    @retry(retry=retry_if_exception_type(aio.ClientError),
+           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
+           after=after_log(logger, logging.DEBUG),
+           stop=stop_after_attempt(7),
+           before_sleep=before_sleep_log(logger, logging.DEBUG))
+    async def __get_case_count(self, session: aio.ClientSession, params: list) -> Union[dict, aio.ClientResponse]:
+        async with self.sem:
+            response = await session.get(self.URI_CASE, params=params, ssl=self.VERIFY_SSL, proxy=self.PROXY)
+
+            if 200 <= response.status <= 299:
+                return await response.json(content_type=None)  # Set content type if known
+            elif response.status in [429, 500, 502, 503, 504]:
+                raise aio.ClientError
+            else:
+                return response
+
+    async def get_cases(self, **kwargs: Optional) -> dict:
+        """See process_params() for kwargs"""
+        params = self.pl_process_params(**kwargs, offset=None)
+        case_count = await self.get_case_count(**kwargs)
+
+        async with aio.ClientSession(auth=self.AUTH) as session:
+            if NFO:
+                logger.info('Getting cases...')
+
+            tasks = []
+            for x in range(0, case_count + 1, self.MAX_RECORDS):
+                params.append(('offset', x))
+                tasks.append(asyncio.create_task(self.__get_cases(session=session, params=copy(params))))
+                del params[-1]
+
+            results = await asyncio.gather(*tasks)
+
+            if NFO:
+                logger.info('\tComplete.')
+
+        await session.close()
+
+        return await self.process_results(results, 'data')
+
+    @retry(retry=retry_if_exception_type(aio.ClientError),
+           wait=wait_random_exponential(multiplier=1.25, min=3, max=60),
+           after=after_log(logger, logging.DEBUG),
+           stop=stop_after_attempt(7),
+           before_sleep=before_sleep_log(logger, logging.DEBUG))
+    async def __get_cases(self, session: aio.ClientSession, params: List[Tuple[Any, Any]]) -> Union[
+        dict, aio.ClientResponse]:
+        async with self.sem:
+
+            response = await session.get(self.URI_CASE, params=params, ssl=self.VERIFY_SSL, proxy=self.PROXY)
+            if 200 <= response.status <= 299:
+                return await response.json(content_type=None)  # Set content type if known
             elif response.status in [429, 500, 502, 503, 504]:
                 raise aio.ClientError
             else:
