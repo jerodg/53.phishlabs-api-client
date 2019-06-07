@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.7
-"""Test Phishlabs API: Get Attachment
+"""Test Phishlabs API: Get Case
    Jerod Gawne, 2019.01.09 <https://github.com/jerodg/>"""
 import logging
 import sys
@@ -10,23 +10,23 @@ from os.path import abspath, dirname
 import pytest
 
 from libsea_base.base_api_utils import bprint
-from libsea_phishlabs.phishlabs_api import PhishlabsApi
+from sea_lib_phishlabs.phishlabs_api import PhishlabsApi
 
 logger = logging.getLogger(__name__)
 DBG = logger.isEnabledFor(logging.DEBUG)
 NFO = logger.isEnabledFor(logging.INFO)
 ROOT = dirname(abspath(__file__))
 
+# todo: auto-grab a case_id
 
-# todo: auto-grab an attachment id
 
 @pytest.mark.asyncio
-async def test_get_attachment():
+async def test_get_case():
     ts = time.perf_counter()
-    bprint('Test: Get Attachment')
+    bprint('Test: Get Case')
 
     with PhishlabsApi(root=ROOT, sem=10) as plapi:
-        results = await plapi.get_attachments(attachments={'id': '1f5d2f83-700a-11e9-b826-0eb92493f786'})
+        results = await plapi.get_case(case_id='d75359a0-7749-11e9-94e8-0ee0a3f3cb1c')
         # print('\nresults:', results)  # debug
 
         assert type(results) is dict

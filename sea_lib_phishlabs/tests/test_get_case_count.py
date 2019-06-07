@@ -10,7 +10,7 @@ from os.path import abspath, dirname
 import pytest
 
 from libsea_base.base_api_utils import bprint
-from libsea_phishlabs.phishlabs_api import PhishlabsApi
+from sea_lib_phishlabs.phishlabs_api import PhishlabsApi
 
 logger = logging.getLogger(__name__)
 DBG = logger.isEnabledFor(logging.DEBUG)

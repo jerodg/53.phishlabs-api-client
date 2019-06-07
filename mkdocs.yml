@@ -1,0 +1,32 @@
+copyright: Copyright (c) 2019. Fifth Third Bancorp
+dev_addr: 0.0.0.0:8080
+google_analytics: null
+markdown_extensions:
+  - smarty:
+      smart_quotes: False
+      smart_angled_quotes: True
+  - pymdownx.tasklist
+  - pymdownx.smartsymbols
+  - pymdownx.details
+  - toc:
+      permalink: True
+nav:
+  - About: 'index.md'
+  - Location: 'location.md'
+  - Installation: 'install.md'
+  - Usage: 'use.md'
+  - Test: 'test.md'
+remote_branch: gh-pages
+remote_name: origin
+repo_url: https://github.info53.com/Fifth-Third/sea_lib_base
+repo_name: GitHub Enterprise
+site_author: Jerod Gawne, Holly Fox
+site_description: SEAlib Base Client API
+site_name: SEAlib Base
+site_url: https://github.info53.com/pages/Fifth-Third/sea_lib_base
+strict: true
+theme:
+  name: material
+  palette:
+    primary: 'indigo'
+    accent: 'green'
