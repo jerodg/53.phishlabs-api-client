@@ -8,12 +8,8 @@ import traceback
 import setuptools
 
 logger = logging.getLogger(__name__)
-name = 'libsea_phishlabs'
+name = 'sea_lib_phishlabs'
 
-
-# todo: create documentation
-# todo: create tests
-# todo: rewrite readme in markdown
 
 def readme() -> str:
     with open('README.adoc') as f:
@@ -22,12 +18,12 @@ def readme() -> str:
 
 if __name__ == '__main__':
     try:
-        setuptools.setup(name='libsea_phishlabs',
-                         version='1.0b0.dev0',
+        setuptools.setup(name='sea_lib_phishlabs',
+                         version='1.0.0',
                          description='Phishlabs API Client Library',
                          long_description=readme(),
                          long_description_content_type='text/markdown',
-                         classifiers=['Development Status :: 4 - Beta',
+                         classifiers=['Development Status :: 5 - Production/Stable',
                                       'Environment :: Console',
                                       'Intended Audience :: End Users/Desktop',
                                       'Intended Audience :: Developers',
@@ -37,9 +33,11 @@ if __name__ == '__main__':
                                       'Operating System :: MacOS :: MacOS X',
                                       'Operating System :: Microsoft :: Windows',
                                       'Operating System :: POSIX',
-                                      'Programming Language :: Python',
-                                      'Topic :: Utilities'],
-                         keywords='api client phishlabs',
+                                      'Programming Language :: Python :: 3.7',
+                                      'Topic :: Utilities',
+                                      'Topic :: Internet',
+                                      'Topic :: Internet :: WWW/HTTP'],
+                         keywords='sea lib api client phishlabs',
                          url='https://github.info53.com/Fifth-Third/SEA-LibSEA_PhishLabs',
                          author='Jerod Gawne',
                          author_email='jerodgawne@gmail.com',

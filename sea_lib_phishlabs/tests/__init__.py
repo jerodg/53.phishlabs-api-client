@@ -4,7 +4,7 @@ import logging
 import sys
 import traceback
 
-from libsea_phishlabs.tests import test_get_case_count
+from sea_lib_phishlabs.tests import test_get_case_count
 
 ___all___ = ['test_phishlabs_api']
 

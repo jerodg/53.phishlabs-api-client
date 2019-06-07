@@ -10,7 +10,7 @@ from jgutils.persistentdict import PersistentDict as PerDi
 from os.path import (abspath, dirname, realpath)
 from random import choice
 
-from libsea_phishlabs.phishlabs_api import PhishlabsApi
+from sea_lib_phishlabs.phishlabs_api import PhishlabsApi
 
 logger = logging.getLogger(__name__)
 DBG = logger.isEnabledFor(logging.DEBUG)

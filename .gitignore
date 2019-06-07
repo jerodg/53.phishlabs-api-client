@@ -138,9 +138,8 @@ fabric.properties
 [Ll]ib
 [Ll]ib64
 [Ll]ocal
-[Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
 Pipfile.lock
 
-/libsea_base
+site/
