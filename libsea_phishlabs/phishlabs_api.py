@@ -210,7 +210,6 @@ class PhishlabsApi(ApiBase):
     async def __get_cases(self, session: aio.ClientSession, params: List[Tuple[Any, Any]]) -> Union[
         dict, aio.ClientResponse]:
         async with self.sem:
-
             response = await session.get(self.URI_CASE, params=params, ssl=self.VERIFY_SSL, proxy=self.PROXY)
             if 200 <= response.status <= 299:
                 return await response.json(content_type=None)  # Set content type if known
