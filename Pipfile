@@ -19,6 +19,7 @@ aiodns = "*"
 better-exceptions = "*"
 cchardet = "*"
 sea_lib_base = "*"
+tenacity = "*"
 ujson = "*"
 
 [requires]
