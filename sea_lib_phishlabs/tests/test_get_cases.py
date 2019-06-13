@@ -1,21 +1,13 @@
 #!/usr/bin/env python3.7
-"""Test Phishlabs API: Get Cases
-   Jerod Gawne, 2019.01.09 <https://github.com/jerodg/>"""
-import logging
-import sys
+"""Phishlabs API: Test Get Cases
+    Jerod Gawne, 2019.06.13 <https://github.com/jerodg>"""
 import time
-import traceback
-from os.path import abspath, dirname, realpath
 
 import pytest
+from os.path import realpath
+from sea_lib_base.base_utils import bprint
 
-from libsea_base.base_api_utils import bprint
 from sea_lib_phishlabs.phishlabs_api import PhishlabsApi
-
-logger = logging.getLogger(__name__)
-DBG = logger.isEnabledFor(logging.DEBUG)
-NFO = logger.isEnabledFor(logging.INFO)
-ROOT = dirname(abspath(__file__))
 
 
 @pytest.mark.asyncio
@@ -23,7 +15,7 @@ async def test_get_cases():
     ts = time.perf_counter()
     bprint('Test: Get Cases')
 
-    with PhishlabsApi(root=ROOT, sem=10) as plapi:
+    with PhishlabsApi(sem=10) as plapi:
         results = await plapi.get_cases()
         # print('\nresults: ', results)  # debug
 
@@ -51,10 +43,3 @@ async def test_get_cases():
                 # print(i, x)
 
     bprint(f'-> Completed in {round((time.perf_counter() - ts) / 60, 2)} minutes.')
-
-
-if __name__ == '__main__':
-    try:
-        print(__doc__)
-    except Exception as excp:
-        logger.exception(traceback.print_exception(*sys.exc_info()))
