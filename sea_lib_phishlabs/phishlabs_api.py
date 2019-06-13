@@ -1,28 +1,25 @@
 #!/usr/bin/env python3.7
-"""LibSEA Phishlabs: API
-   Jerod Gawne, 2019.01.09 <https://github.com/jerodg>"""
+"""SEAlib Phishlabs: API
+   Jerod Gawne, 2019.06.13 <https://github.com/jerodg>"""
 import asyncio
 import logging
-from copy import copy
-from os import getenv
-from os.path import abspath, basename, dirname, realpath
-from sys import argv, exc_info
-from traceback import print_exception
 from typing import Any, List, Optional, Tuple, Union
 from uuid import uuid4
 
 import aiohttp as aio
 from aiohttp import BasicAuth
+from copy import copy
+from os import getenv
+from os.path import abspath, dirname, realpath
+from sea_lib_base.base_api import BaseApi
 from tenacity import after_log, before_sleep_log, retry, retry_if_exception_type, stop_after_attempt, wait_random_exponential
-
-from libsea_base.base_api import ApiBase
 
 logger = logging.getLogger(__name__)
 DBG = logger.isEnabledFor(logging.DEBUG)
 NFO = logger.isEnabledFor(logging.INFO)
 
 
-class PhishlabsApi(ApiBase):
+class PhishlabsApi(BaseApi):
     AUTH: BasicAuth = BasicAuth(login=getenv('PL_USER'), password=getenv('PL_PASS'))
     CHUNK_SIZE: int = 1024
     MAX_RECORDS: int = 100  # API Max is 200, minimum is 20 (default)
@@ -36,11 +33,11 @@ class PhishlabsApi(ApiBase):
     URI_CLOSED_CASE_URI = f'{URI_CASE}/closed'
     VERIFY_SSL: bool = False  # Verify SSL Certifcates
 
-    def __init__(self, root: Optional[str] = None, sem: Optional[int] = None, ):
-        ApiBase.__init__(self, root=root or self.ROOT, sem=sem or self.SEM, parent=basename(argv[0][:-3]))
+    def __init__(self, sem: Optional[int] = None, ):
+        BaseApi.__init__(self, sem=sem or self.SEM, )
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        ApiBase.__exit__(self, exc_type, exc_val, exc_tb)
+        BaseApi.__exit__(self, exc_type, exc_val, exc_tb)
 
     def pl_process_params(self, **kwargs) -> list:
         parms = {'caseType': kwargs.pop('case_type', ['Phishing', 'Phishing Redirect', 'Vishing']),
@@ -220,7 +217,4 @@ class PhishlabsApi(ApiBase):
 
 
 if __name__ == '__main__':
-    try:
-        print(__doc__)
-    except Exception as excp:
-        logging.exception(print_exception(*exc_info()))
+    print(__doc__)
