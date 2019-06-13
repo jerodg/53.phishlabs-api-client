@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
-"""Phishlabs API: Test Get Cases Filtered 1
-    Jerod Gawne, 2019.06.13 <https://github.com/jerodg>"""
+"""Phishlabs API: Test Get Cases Filtered
+   Jerod Gawne, 2019.06.13 <https://github.com/jerodg>"""
 import asyncio
 
 from sea_lib_phishlabs.phishlabs_api import PhishlabsApi
@@ -19,9 +19,9 @@ def format_banner(message) -> str:
 
 
 with PhishlabsApi(sem=10) as plapi:
-    def test_get_cases_filtered1():
+    def test_get_cases_filtered():
         loop = asyncio.get_event_loop()
-        results = loop.run_until_complete(plapi.get_cases(case_status=['Assigned', 'New']))
+        results = loop.run_until_complete(plapi.get_cases(case_status='Assigned'))
         # print('\nresults: ', results)  # debug
 
         assert type(results) is dict
@@ -29,7 +29,7 @@ with PhishlabsApi(sem=10) as plapi:
         assert results['failure'][0] is None
         # print('len_results: ', len(results['success']))
 
-        print(format_banner(f'Test: Get Cases Filtered 1 {plapi.get_case_count}'))
+        print(format_banner(f'Test: Get Cases Filtered {plapi.get_case_count}'))
         print('Top 5 Success Result:')
         print(*results['success'][:5], sep='\n')
         print('\nTop 5 Failure Result:')
