@@ -1,21 +1,13 @@
 #!/usr/bin/env python3.7
-"""Test Phishlabs API: Get Case
-   Jerod Gawne, 2019.01.09 <https://github.com/jerodg/>"""
-import logging
-import sys
+"""Phishlabs API: Test Get Case
+    Jerod Gawne, 2019.06.13 <https://github.com/jerodg>"""
 import time
-import traceback
-from os.path import abspath, dirname
 
 import pytest
+from sea_lib_base.base_utils import bprint
 
-from libsea_base.base_api_utils import bprint
 from sea_lib_phishlabs.phishlabs_api import PhishlabsApi
 
-logger = logging.getLogger(__name__)
-DBG = logger.isEnabledFor(logging.DEBUG)
-NFO = logger.isEnabledFor(logging.INFO)
-ROOT = dirname(abspath(__file__))
 
 # todo: auto-grab a case_id
 
@@ -25,7 +17,7 @@ async def test_get_case():
     ts = time.perf_counter()
     bprint('Test: Get Case')
 
-    with PhishlabsApi(root=ROOT, sem=10) as plapi:
+    with PhishlabsApi(sem=10) as plapi:
         results = await plapi.get_case(case_id='d75359a0-7749-11e9-94e8-0ee0a3f3cb1c')
         # print('\nresults:', results)  # debug
 
@@ -39,10 +31,3 @@ async def test_get_case():
         print(*results['failure'][:5], sep='\n')
 
     bprint(f'-> Completed in {round((time.perf_counter() - ts) / 60, 2)} minutes.')
-
-
-if __name__ == '__main__':
-    try:
-        print(__doc__)
-    except Exception as excp:
-        logger.exception(traceback.print_exception(*sys.exc_info()))
