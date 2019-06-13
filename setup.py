@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
-"""LibSEA Phishlabs: Setup
-   Jerod Gawne, 2019.03.20 <https://github.com/jerodg/>"""
+"""SEAlib Phishlabs: Setup
+   Jerod Gawne, 2019.06.13 <https://github.com/jerodg/>"""
 import logging
 import sys
 import traceback
@@ -12,7 +12,7 @@ name = 'sea_lib_phishlabs'
 
 
 def readme() -> str:
-    with open('README.adoc') as f:
+    with open('README.md') as f:
         return f.read()
 
 
@@ -38,12 +38,18 @@ if __name__ == '__main__':
                                       'Topic :: Internet',
                                       'Topic :: Internet :: WWW/HTTP'],
                          keywords='sea lib api client phishlabs',
-                         url='https://github.info53.com/Fifth-Third/SEA-LibSEA_PhishLabs',
+                         url='https://github.info53.com/Fifth-Third/sea_lib_phishlabs',
                          author='Jerod Gawne',
                          author_email='jerodgawne@gmail.com',
-                         license='Other/Proprietary',
+                         license='Other/Proprietary License',
                          packages=setuptools.find_packages(),
-                         install_requires=['aiohttp', 'aiodns', 'cchardet', 'libsea_base', 'tenacity'],
+                         install_requires=['aiohttp',
+                                           'aiodns',
+                                           'better-exceptions',
+                                           'cchardet',
+                                           'sea_lib_base',
+                                           'tenacity'
+                                           'ujson'],
                          include_package_data=True,
                          zip_safe=True,
                          setup_requires=['pytest-runner'],
@@ -51,7 +57,9 @@ if __name__ == '__main__':
                          scripts=[],
                          entry_points={'console_scripts': []},
                          python_requires='~=3.7',
-                         project_urls={
-                             'Documentation': 'https://github.info53.com/Fifth-Third/SEA-LibSEA_Phantom/tree/master/docs'})
+                         project_urls={'Documentation': 'https://github.info53.com/pages/Fifth-Third/sea_lib_phishlabs/',
+                                       'Source': 'https://github.info53.com/Fifth-Third/sea_lib_phishlabs',
+                                       'Bugs': 'https://github.info53.com/Fifth-Third/sea_lib_phishlabs/issues'},
+                         package_data={'sea_lib_phishlabs': ['LICENSE.txt', 'README.md']})
     except Exception as excp:
         logger.exception(traceback.print_exception(*sys.exc_info()))
