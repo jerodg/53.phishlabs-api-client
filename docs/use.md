@@ -1,6 +1,6 @@
 # Usage
 
-## ApiBase
+## PhishlabsApi
 
 Main class object `PhishlabsApi` contains the following methods.
 
