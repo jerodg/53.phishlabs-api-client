@@ -1,12 +1,12 @@
-Title: Fifth-Third / SEAlib_Base
-Summary: Base API doc
+Title: Fifth-Third / SEAlib_Phishlabs
+Summary: Phishlabs API doc
 Authors:
 	- Jerod Gawne
 	- Holly Fox
-Date: 05-21-19
+Date: 06-13-19
 
-# LibSEA Base
-Base module for REST client APIs.
+# SEAlib Phishlabs
+REST API Client Module for Phishlabs
 
 ## Owner
 
@@ -29,7 +29,7 @@ All files/folders are owned by functional account 'infosecintegration'.
 #### Development
 
 	/home/infosecintegration/.dev_config/
-		.base.sh
+		.libsea_phishlabs.sh
 
 #### Production
 None
