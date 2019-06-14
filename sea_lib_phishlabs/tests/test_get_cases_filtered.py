@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 """Phishlabs API: Test Get Cases Filtered
-   Jerod Gawne, 2019.06.13 <https://github.com/jerodg>"""
+   Jerod Gawne, 2019.01.09 <https://github.com/jerodg>"""
 import asyncio
 
 from sea_lib_phishlabs.phishlabs_api import PhishlabsApi
