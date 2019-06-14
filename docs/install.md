@@ -4,11 +4,11 @@
 
 #### Development
 
-	pipenv install sea-lib_base --dev
+	pipenv install sea-lib-phishlabs --dev
 	
 #### Production
 
-	pipenv install sea-lib_base
+	pipenv install sea-lib-phishlabs
 
 ## Upgrade
 
@@ -30,10 +30,12 @@
 
 ## Proxy
 
-Proxy access is needed only for running tests; This is optional.
+* Proxy needed as environment variable to access URI.
 
-## Enviornment Variables
+## Environment Variables
 
-* `HTTPS_PROXY` - Optional, define with URI to proxy if running tests
-
+* `PL_USER` - Username
+* `PL_PASS` - Password
+* `PL_PROXY` - Phishlabs proxy
+* `PL_URI` - API URI
 
