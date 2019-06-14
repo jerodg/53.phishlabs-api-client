@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 """SEAlib Phishlabs: API
-   Jerod Gawne, 2019.06.13 <https://github.com/jerodg>"""
+   Jerod Gawne, 2019.01.09 <https://github.com/jerodg>"""
 import asyncio
 import logging
 from typing import Any, List, Optional, Tuple, Union
