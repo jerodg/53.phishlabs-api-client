@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 """Phishlabs API: Test Get Case Count Filtered
-    Jerod Gawne, 2019.06.13 <https://github.com/jerodg>"""
+    Jerod Gawne, 2019.01.09 <https://github.com/jerodg>"""
 import time
 
 import pytest
