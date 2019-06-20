@@ -1,6 +1,6 @@
 # Testing
 
-Tests are located in project directory folder `./sealib_base/tests`.
+Tests are located in project directory folder `./sea_lib_phishlabs/tests`.
 
 ## Instructions
 
@@ -11,7 +11,7 @@ Select Folder
     
 Clone Source
 
-    git clone -b devl git@github.info53.com:Fifth-Third/sea_lib_base.git
+    git clone -b devl git@github.info53.com:Fifth-Third/sea_lib_phishlabs.git
 
 Virtual Environment Setup
 
@@ -19,11 +19,11 @@ Virtual Environment Setup
 
 Tests
 
-    pytest /sea_dev/sea_lib_base/sealib_base/tests
+    pytest /sea/sea_lib_phishlabs/sea_lib_phishlabs/tests
 
 Coverage
 
-	pytest --cov /sea_dev/sea_lib_base/sealib_base/tests --cov-report=html
+	pytest --cov /sea/sea_lib_phishlabs/sea_lib_phishlabs/tests --cov-report=html
 	
 Build/Deploy Documentation
 
@@ -31,4 +31,5 @@ Build/Deploy Documentation
     
 
 ### Production
-None
+
+* None
