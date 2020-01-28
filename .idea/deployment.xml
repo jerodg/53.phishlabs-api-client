@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="aims-prod: phishlabs-api-client">
+    <serverData>
+      <paths name="aims-prod: phishlabs-api-client">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/opt/sea/phishlabs-api-client" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath path="/opt/sea/phishlabs-api-client/.venv" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.venv" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

@@ -1,32 +1,45 @@
-copyright: Copyright (c) 2019. Fifth Third Bancorp
+copyright: Copyright © 2019. Jerod Gawne
 dev_addr: 0.0.0.0:8080
 google_analytics: null
 markdown_extensions:
-  - smarty:
-      smart_quotes: False
-      smart_angled_quotes: True
-  - pymdownx.tasklist
-  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.betterem
+  - pymdownx.extra
   - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.highlight:
+      linenums: True
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.progressbar
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: True
+  - pymdownx.tasklist
+  - pymdownx.tilde
+  - smarty
   - toc:
       permalink: True
+  - footnotes
 nav:
   - About: 'index.md'
-  - Location: 'location.md'
-  - Installation: 'install.md'
-  - Usage: 'use.md'
-  - Test: 'test.md'
+plugins:
+  - search:
+      lang: en
+  - macros
 remote_branch: gh-pages
 remote_name: origin
-repo_url: https://github.info53.com/Fifth-Third/sea_lib_phishlabs
-repo_name: GitHub Enterprise
-site_author: Jerod Gawne, Holly Fox
-site_description: SEAlib Phishlabs Client API
-site_name: SEAlib Phishlabs
-site_url: https://github.info53.com/pages/Fifth-Third/sea_lib_phishlabs
+repo_url: https://github.com/jerodg/phishlabs-api-client/tree/gh-pages
+repo_name: GitHub
+site_author: Jerod Gawne
+site_description: Phishlabs API Client Documentation
+site_name: Phishlabs API Client Documentation
+site_url: https://jerodg.github.io/phishlabs-api-client
 strict: true
 theme:
   name: material
-  palette:
-    primary: 'indigo'
-    accent: 'green'
+#  palette:
+#    primary: 'indigo'
+#    accent: 'green'
